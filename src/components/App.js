@@ -34,7 +34,7 @@ function App() {
         setError("");
 
         const res = await fetch(
-          `http://api.openweathermap.org/data/2.5/forecast?q=${city},${state},us&appid=${KEY}&units=imperial`
+          `https://api.openweathermap.org/data/2.5/forecast?q=${city},${state},us&appid=${KEY}&units=imperial`
         );
 
         if (!res.ok)
