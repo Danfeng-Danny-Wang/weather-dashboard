@@ -27,8 +27,6 @@ function App() {
     if (city === "") return;
 
     async function fetchWeatherData() {
-      console.log(city, state);
-
       try {
         setIsLoading(true);
         setError("");
@@ -51,7 +49,6 @@ function App() {
           };
         });
         const fiveDayAverageData = await calculateFiveDayData(weatherData);
-        console.log(fiveDayAverageData);
         setWeatherData(fiveDayAverageData);
         setCurrentCity(city);
         if (!searchHistory.includes(city))
