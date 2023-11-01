@@ -14,39 +14,47 @@ function App() {
   const [state, setState] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const [weatherData, setWeatherData] = useState([]);
 
-  async function handleSearchWeather() {
-    console.log(city, state);
+  function handleSearchWeather() {
+    async function fetchWeatherData() {
+      console.log(city, state);
 
-    try {
-      setIsLoading(true);
-      setError("");
+      try {
+        setIsLoading(true);
+        setError("");
 
-      const res = await fetch(
-        `http://api.openweathermap.org/data/2.5/forecast?q=${city},${state},us&appid=${KEY}&units=imperial`
-      );
+        const res = await fetch(
+          `http://api.openweathermap.org/data/2.5/forecast?q=${city},${state},us&appid=${KEY}&units=imperial`
+        );
 
-      if (!res.ok)
-        throw new Error("Something went wrong with fetching the location");
+        if (!res.ok)
+          throw new Error("Something went wrong with fetching the location");
 
-      const data = await res.json();
-      const weatherData = data.list.map((timestamp) => {
-        return {
-          day: timestamp.dt_txt.split(" ")[0],
-          temp: timestamp.main.temp,
-          humidity: timestamp.main.humidity,
-          weather: timestamp.weather[0].main,
-          windSpeed: timestamp.wind.speed,
-        };
-      });
-      const fiveDayAverageData = calculateFiveDayData(weatherData);
-      console.log(fiveDayAverageData);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setIsLoading(false);
+        const data = await res.json();
+        const weatherData = await data.list.map((timestamp) => {
+          return {
+            day: timestamp.dt_txt.split(" ")[0],
+            temp: timestamp.main.temp,
+            humidity: timestamp.main.humidity,
+            weather: timestamp.weather[0].main,
+            windSpeed: timestamp.wind.speed,
+          };
+        });
+        const fiveDayAverageData = await calculateFiveDayData(weatherData);
+        console.log(fiveDayAverageData);
+        setWeatherData(fiveDayAverageData);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setIsLoading(false);
+      }
     }
+
+    fetchWeatherData();
   }
+
+  // console.log(weatherData);
 
   return (
     <>
@@ -64,7 +72,12 @@ function App() {
       </SearchBar>
 
       <Main>
-        <Result />
+        <Result
+          isLoading={isLoading}
+          error={error}
+          weatherData={weatherData}
+          city={city}
+        />
       </Main>
     </>
   );

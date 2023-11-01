@@ -1,16 +1,27 @@
-function Result() {
+import Error from "./Error";
+import Loading from "./Loading";
+import WeatherCard from "./WeatherCard";
+import Welcome from "./Welcome";
+
+function Result({ isLoading, error, weatherData, city }) {
+  const noData = !weatherData.length;
+
   return (
-    <div>
-      <section>
-        <h2>Atlanta (11/01/2023)</h2>
-        <p>Temp: 76.62 F</p>
-        <p>Wind: 8.43 MPH</p>
-        <p>Humidity: 44%</p>
-      </section>
-      <section>
-        <h3>5-Day Forecast:</h3>
-      </section>
-    </div>
+    <>
+      {!isLoading && !error && noData && <Welcome />}
+      {isLoading && <Loading />}
+      {error && <Error error={error} />}
+      {!isLoading && !error && !noData && (
+        <>
+          <h2>{city}</h2>
+          <ul>
+            {weatherData.map((weather) => (
+              <WeatherCard weather={weather} key={weather.day} />
+            ))}
+          </ul>
+        </>
+      )}
+    </>
   );
 }
 

@@ -15,7 +15,9 @@ function Search({ city, state, setCity, setState, onSearch }) {
         value={state}
         onChange={(e) => setState(e.target.value)}
       />
-      <button onClick={onSearch}>Search</button>
+      <button onClick={onSearch} disabled={!city}>
+        Search
+      </button>
     </div>
   );
 }
