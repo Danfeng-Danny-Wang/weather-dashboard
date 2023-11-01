@@ -1,13 +1,5 @@
-import Histories from "./Histories";
-import Search from "./Search";
-
-function SearchBar() {
-  return (
-    <div>
-      <Search />
-      <Histories />
-    </div>
-  );
+function SearchBar({ children }) {
+  return <div>{children}</div>;
 }
 
 export default SearchBar;
