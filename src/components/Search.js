@@ -2,7 +2,7 @@ function Search({ city, state, setCity, setState, onSearch }) {
   return (
     <div>
       <h2>Search for a City:</h2>
-      <p>Only supports city in US now...</p>
+      <p>Do not enter state code for cities outside of U.S.</p>
       <input
         type="text"
         placeholder="Type city name here"
@@ -15,7 +15,7 @@ function Search({ city, state, setCity, setState, onSearch }) {
         value={state}
         onChange={(e) => setState(e.target.value)}
       />
-      <button onClick={onSearch} disabled={!city}>
+      <button onClick={() => onSearch(city, state)} disabled={!city}>
         Search
       </button>
     </div>

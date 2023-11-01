@@ -6,17 +6,26 @@ import Result from "./Result";
 import Search from "./Search";
 import SearchBar from "./SearchBar";
 import { calculateFiveDayData } from "../helpers/calculateFiveDayData";
+import { useLocalStorageState } from "../hooks/useLocalStorageState";
 
 const KEY = "dc3f53838236fe4041554494403ffdc4";
 
 function App() {
   const [city, setCity] = useState("");
   const [state, setState] = useState("");
+  const [currentCity, setCurrentCity] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [weatherData, setWeatherData] = useState([]);
 
-  function handleSearchWeather() {
+  const [searchHistory, setSearchHistory] = useLocalStorageState(
+    [],
+    "searchedCities"
+  );
+
+  function handleSearchWeather(city, state) {
+    if (city === "") return;
+
     async function fetchWeatherData() {
       console.log(city, state);
 
@@ -44,6 +53,9 @@ function App() {
         const fiveDayAverageData = await calculateFiveDayData(weatherData);
         console.log(fiveDayAverageData);
         setWeatherData(fiveDayAverageData);
+        setCurrentCity(city);
+        if (!searchHistory.includes(city))
+          setSearchHistory((searchHistory) => [...searchHistory, city]);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -53,8 +65,6 @@ function App() {
 
     fetchWeatherData();
   }
-
-  // console.log(weatherData);
 
   return (
     <>
@@ -68,7 +78,12 @@ function App() {
           setState={setState}
           onSearch={handleSearchWeather}
         />
-        <Histories />
+        <Histories
+          searchHistory={searchHistory}
+          onSearch={handleSearchWeather}
+          setCity={setCity}
+          setState={setState}
+        />
       </SearchBar>
 
       <Main>
@@ -76,7 +91,7 @@ function App() {
           isLoading={isLoading}
           error={error}
           weatherData={weatherData}
-          city={city}
+          currentCity={currentCity}
         />
       </Main>
     </>

@@ -3,7 +3,7 @@ import Loading from "./Loading";
 import WeatherCard from "./WeatherCard";
 import Welcome from "./Welcome";
 
-function Result({ isLoading, error, weatherData, city }) {
+function Result({ isLoading, error, weatherData, currentCity }) {
   const noData = !weatherData.length;
 
   return (
@@ -13,7 +13,7 @@ function Result({ isLoading, error, weatherData, city }) {
       {error && <Error error={error} />}
       {!isLoading && !error && !noData && (
         <>
-          <h2>{city}</h2>
+          <h2>{currentCity}</h2>
           <ul>
             {weatherData.map((weather) => (
               <WeatherCard weather={weather} key={weather.day} />
